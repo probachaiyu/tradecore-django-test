@@ -1,0 +1,25 @@
+repos:
+-   repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+    - id: black
+      language_version: python3.6
+      entry: black -l 100
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v1.3.0
+    hooks:
+    - id: flake8
+      args: ['--config=setup.cfg']
+    - id: check-ast
+-   repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    sha: v1.1.0
+    hooks:
+    - id: python-safety-dependencies-check
+-   repo: git://github.com/luismayta/pre-commit-mypy
+    sha: 0.1.1
+    hooks:
+    -   id: mypy
+        args:
+        - --ignore-missing-imports
+-   repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v5.7.0
