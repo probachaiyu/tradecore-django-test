@@ -25,7 +25,7 @@ class PostModelTest(APITestCase):
         self.assertEqual(str(self.post), "Ugandan anthem - George William Kakoma")
 
 
-class GetAllPostssTest(BaseViewTest):
+class GetAllPostsTest(BaseViewTest):
 
     def test_get_all_posts(self):
         """

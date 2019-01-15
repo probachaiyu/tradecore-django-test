@@ -40,7 +40,7 @@ class PostSerializerSchema(serializers.ModelSerializer):
         )
 
     def get_is_fan(self, obj) -> bool:
-        """Check if a `request.user` has liked this tweet (`obj`).
+        """Check if a `request.user` has liked this post (`obj`).
         """
         user = self.context.get('request').user
         return services.is_fan(obj, user)

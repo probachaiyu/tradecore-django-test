@@ -1,5 +1,8 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+
+class CustomUserManager(UserManager):
+    pass
 
 
 class User(AbstractUser):
@@ -14,6 +17,8 @@ class User(AbstractUser):
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
+
+    objects = CustomUserManager()
 
     class Meta:
         verbose_name = 'User'

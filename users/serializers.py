@@ -30,7 +30,7 @@ class UpdateUserSchema(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password", "first_name", "last_name", "date_of_birth",
+        fields = ("id", "username", "email", "password", "first_name", "last_name", "date_of_birth",
                   "bio", "location", "facebook", "avatar",
                   "site", "linkedin", "skype")
 
@@ -42,16 +42,18 @@ class UpdateUserSchema(serializers.ModelSerializer):
 
     def validate_password(cls, key):
         if not re.match(
-                r"^.*(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}.*$", key
+                r"^[a-zA-Z]\w{3,14}$", key
                 ):
             raise serializers.ValidationError("Invalid password: %s" % key)
         return key
 
     def create(self, validated_data):
         clearbit_data = ClearbitClient.get_person_data(validated_data["email"])
-        print('===', clearbit_data)
         result = ClearbitClient.update_person_data(clearbit_data, validated_data)
-        return User.objects.create(**result)
+        user = User(**result)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
     def update(self, instance, validated_data):
         for key, value in validated_data.items():

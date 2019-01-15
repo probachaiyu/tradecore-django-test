@@ -1,9 +1,9 @@
 import jwt
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login, user_logged_in
+from django.contrib.auth import get_user_model, login, user_logged_in, authenticate
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework.views import status
+from rest_framework.views import status, APIView
 from rest_framework_jwt.settings import api_settings
 
 from django_rest_network.permissions import IsOwner
@@ -36,14 +36,13 @@ class LoginView(generics.CreateAPIView):
             # using Django’s session framework.
             login(request, user)
             payload = jwt_payload_handler(user)
-            token = jwt.encode(payload, settings.SECRET_KEY)
+            token = jwt_encode_handler(payload)
             user_details = UserSerializer(user).data
             user_details['token'] = token
             user_logged_in.send(sender=user.__class__,
                                 request=request, user=user)
             return Response(user_details, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
 class RegisterUsersView(generics.CreateAPIView):
     """
@@ -56,6 +55,7 @@ class RegisterUsersView(generics.CreateAPIView):
         serializer = CreateUserSchema(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(

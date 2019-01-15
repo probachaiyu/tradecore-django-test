@@ -24,7 +24,7 @@ urlpatterns = [
     path(r'', schema_view),
     path('admin/', admin.site.urls),
     path(r'api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path(r'api-token-auth/', obtain_jwt_token),
+    path(r'api-token-auth/', obtain_jwt_token, name='create-token'),
     path(r'^api-token-refresh/', refresh_jwt_token),
     path(r'^api-token-verify/', verify_jwt_token),
 
